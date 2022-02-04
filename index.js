@@ -3,5 +3,6 @@
  */
 
 import ModalDropdown from './components/ModalDropdown';
-export default ModalDropdown;
-module.exports = ModalDropdown;
+import ModalDropdownOld from './components/ModalDropdownOld';
+export default ModalDropdownOld;
+module.exports = ModalDropdownOld;
