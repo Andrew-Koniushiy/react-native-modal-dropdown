@@ -55,6 +55,11 @@ class ModalDropdownOld extends Component {
       PropTypes.object,
       PropTypes.array,
     ]),
+    dropdownListStyle: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.object,
+      PropTypes.array,
+    ]),
     dropdownTextStyle: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.object,
@@ -320,11 +325,12 @@ class ModalDropdownOld extends Component {
       showsVerticalScrollIndicator,
       keyboardShouldPersistTaps,
       options,
+      dropdownListStyle,
     } = this.props;
     return (
       <FlatList
         scrollEnabled={scrollEnabled}
-        style={styles.list}
+        style={[styles.list, dropdownListStyle]}
         data={options}
         renderItem={this._renderRow}
         ItemSeparatorComponent={renderSeparator || this._renderSeparator}
