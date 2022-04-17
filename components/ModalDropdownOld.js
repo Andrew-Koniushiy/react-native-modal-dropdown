@@ -81,6 +81,7 @@ class ModalDropdownOld extends Component {
     onSelect: PropTypes.func,
     getValueLabel: PropTypes.func,
     getOptionLabel: PropTypes.func,
+    numColumns: PropTypes.number,
   };
 
   static defaultProps = {
@@ -92,6 +93,7 @@ class ModalDropdownOld extends Component {
     animated: true,
     showsVerticalScrollIndicator: true,
     keyboardShouldPersistTaps: 'never',
+    numColumns: 1,
   };
 
   constructor(props) {
@@ -326,9 +328,11 @@ class ModalDropdownOld extends Component {
       keyboardShouldPersistTaps,
       options,
       dropdownListStyle,
+      numColumns,
     } = this.props;
     return (
       <FlatList
+        numColumns={numColumns}
         scrollEnabled={scrollEnabled}
         style={[styles.list, dropdownListStyle]}
         data={options}
