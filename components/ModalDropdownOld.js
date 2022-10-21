@@ -338,19 +338,30 @@ class ModalDropdownOld extends Component {
       numColumns,
     } = this.props;
     return (
-      <FlatList
-        ref={c => (this.listRef = c)}
-        numColumns={numColumns}
-        scrollEnabled={scrollEnabled}
-        style={[styles.list, dropdownListStyle]}
-        data={options}
-        renderItem={this._renderRow}
-        ItemSeparatorComponent={renderSeparator || this._renderSeparator}
-        automaticallyAdjustContentInsets={false}
-        showsVerticalScrollIndicator={showsVerticalScrollIndicator}
-        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-        keyExtractor={(item, index) => index.toString()}
-      />
+            <FlatList
+                    ref={c => (this.listRef = c)}
+                    numColumns={numColumns}
+                    scrollEnabled={scrollEnabled}
+                    style={[styles.list, dropdownListStyle]}
+                    data={options}
+                    onScrollToIndexFailed={info => {
+                      const wait = new Promise(resolve => setTimeout(resolve, 500));
+                      wait.then(() => {
+                        this.listRef && this.listRef.scrollToIndex(
+                                {
+                                  index: this.state.selectedIndex,
+                                  animated: false,
+                                  viewPosition: 0.5,
+                                });
+                      });
+                    }}
+                    renderItem={this._renderRow}
+                    ItemSeparatorComponent={renderSeparator || this._renderSeparator}
+                    automaticallyAdjustContentInsets={false}
+                    showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+                    keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+                    keyExtractor={(item, index) => index.toString()}
+            />
     );
   }
 
