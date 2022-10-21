@@ -163,6 +163,13 @@ class ModalDropdownOld extends Component {
       this.setState({
         showDropdown: true,
       });
+      setTimeout(() => {
+        this.listRef && this.listRef.scrollToIndex({
+          viewPosition: 0.5,
+          index: this.state.selectedIndex,
+          animated: false,
+        });
+      }, 300);
     });
   }
 
@@ -332,6 +339,7 @@ class ModalDropdownOld extends Component {
     } = this.props;
     return (
       <FlatList
+        ref={c => (this.listRef = c)}
         numColumns={numColumns}
         scrollEnabled={scrollEnabled}
         style={[styles.list, dropdownListStyle]}
