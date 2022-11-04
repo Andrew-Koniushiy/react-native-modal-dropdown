@@ -160,16 +160,10 @@ class ModalDropdownOld extends Component {
 
   show() {
     this._updatePosition(() => {
-      this.setState({
-        showDropdown: true,
-      });
-      setTimeout(() => {
-        this.listRef && this.listRef.scrollToIndex({
-          viewPosition: 0.5,
-          index: this.state.selectedIndex,
-          animated: false,
-        });
-      }, 300);
+      this.setState(
+              {
+                showDropdown: true,
+              });
     });
   }
 
@@ -273,8 +267,8 @@ class ModalDropdownOld extends Component {
     const windowHeight = dimensions.height;
 
     const dropdownHeight =
-      (dropdownStyle && StyleSheet.flatten(dropdownStyle).height) ||
-      StyleSheet.flatten(styles.dropdown).height;
+            (dropdownStyle && StyleSheet.flatten(dropdownStyle).height) ||
+            StyleSheet.flatten([styles.dropdown, dropdownStyle]).height;
 
     const bottomSpace =
       windowHeight - this._buttonFrame.y - this._buttonFrame.h;
@@ -284,7 +278,8 @@ class ModalDropdownOld extends Component {
     const showInLeft = rightSpace >= this._buttonFrame.x;
     const statusBar = Platform.select({
       ios: 0,
-      android: StatusBar.currentHeight,
+      // android: StatusBar.currentHeight,
+      android: 0,
     });
     const positionStyle = {
       height: dropdownHeight,
@@ -336,25 +331,37 @@ class ModalDropdownOld extends Component {
       options,
       dropdownListStyle,
       numColumns,
+      dropdownTextStyle,
     } = this.props;
+    const itemHeight = (StyleSheet.flatten(dropdownTextStyle).height || 0) + StyleSheet.hairlineWidth;
     return (
             <FlatList
                     ref={c => (this.listRef = c)}
+                    onLayout={() => {
+                      setTimeout(() => {
+                        this.listRef &&
+                        this.listRef.scrollToIndex({
+                          viewPosition: 0.5,
+                          index: this.state.selectedIndex,
+                          animated: false,
+                        });
+                      },200)
+                    }}
+                    getItemLayout={(data, index) => {
+                      let offset = 0;
+                      for (let i = 0; i < index; i++) {
+                        offset += itemHeight;
+                      }
+                      return {
+                        length: itemHeight,
+                        offset: offset,
+                        index,
+                      };
+                    }}
                     numColumns={numColumns}
                     scrollEnabled={scrollEnabled}
                     style={[styles.list, dropdownListStyle]}
                     data={options}
-                    onScrollToIndexFailed={info => {
-                      const wait = new Promise(resolve => setTimeout(resolve, 500));
-                      wait.then(() => {
-                        this.listRef && this.listRef.scrollToIndex(
-                                {
-                                  index: this.state.selectedIndex,
-                                  animated: false,
-                                  viewPosition: 0.5,
-                                });
-                      });
-                    }}
                     renderItem={this._renderRow}
                     ItemSeparatorComponent={renderSeparator || this._renderSeparator}
                     automaticallyAdjustContentInsets={false}
